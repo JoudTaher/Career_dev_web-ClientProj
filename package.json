@@ -1,0 +1,9 @@
+{
+  "name": "umsi-elo-resource-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Accessible student resource website for the UMSI Engaged Learning Office.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

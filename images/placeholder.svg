@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title description">
+  <title id="title">University of Michigan image placeholder</title>
+  <desc id="description">A temporary graphic marking where an approved University of Michigan photograph should be added.</desc>
+  <rect width="1200" height="800" fill="#e5e7eb"/>
+  <rect x="42" y="42" width="1116" height="716" rx="24" fill="#ffffff" stroke="#00274c" stroke-width="8" stroke-dasharray="24 18"/>
+  <path d="M360 530l150-170 110 120 92-94 128 144H360z" fill="#d6d6d6" stroke="#00274c" stroke-width="10" stroke-linejoin="round"/>
+  <circle cx="770" cy="278" r="58" fill="#ffcb05" stroke="#00274c" stroke-width="10"/>
+  <text x="600" y="655" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#00274c">Approved U-M image goes here</text>
+</svg>
