@@ -96,3 +96,35 @@ test('resolves every local page link', () => {
     }
   }
 });
+
+test('loads the shared stylesheet', () => {
+  const stylesheetPath = path.join(root, 'css', 'style.css');
+  assert.equal(fs.existsSync(stylesheetPath), true, 'css/style.css should exist');
+
+  for (const fileName of pages) {
+    assert.match(readPage(fileName), /<link[^>]+rel="stylesheet"[^>]+href="css\/style\.css"/i);
+  }
+});
+
+test('defines approved U-M colors', () => {
+  const css = fs.readFileSync(path.join(root, 'css', 'style.css'), 'utf8');
+  assert.match(css, /--color-blue:\s*#00274c\b/i);
+  assert.match(css, /--color-maize:\s*#ffcb05\b/i);
+});
+
+test('shows keyboard focus', () => {
+  const css = fs.readFileSync(path.join(root, 'css', 'style.css'), 'utf8');
+  assert.match(css, /:focus-visible\s*\{/i);
+  assert.match(css, /outline:\s*[^;]+;/i);
+});
+
+test('supports reduced motion', () => {
+  const css = fs.readFileSync(path.join(root, 'css', 'style.css'), 'utf8');
+  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/i);
+});
+
+test('adds tablet and desktop responsive rules', () => {
+  const css = fs.readFileSync(path.join(root, 'css', 'style.css'), 'utf8');
+  assert.match(css, /@media\s*\(min-width:\s*48rem\)/i);
+  assert.match(css, /@media\s*\(min-width:\s*70rem\)/i);
+});
