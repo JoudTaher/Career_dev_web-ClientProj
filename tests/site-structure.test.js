@@ -26,6 +26,13 @@ function getIds(html) {
   return new Set(getTags(html, '[a-z][a-z0-9-]*').map((tag) => getAttribute(tag, 'id')).filter(Boolean));
 }
 
+function assertCanonicalResourceLink(link, fileName, resourceIds) {
+  const href = getAttribute(link, 'href');
+  assert.match(href ?? '', /^resources\.html#[a-z0-9-]+$/, `${fileName} resource link needs one nonempty fragment`);
+  const fragment = href.split('#')[1];
+  assert.equal(resourceIds.has(fragment), true, `${fileName} resource link must target a canonical resource card`);
+}
+
 test('creates the canonical five-page site', () => {
   for (const fileName of pages) {
     assert.equal(fs.existsSync(path.join(root, fileName)), true, `${fileName} should exist`);
@@ -147,6 +154,34 @@ test('resolves local files and resource fragments', () => {
         assert.equal(idsByPage.get(target)?.has(fragment), true, `${fileName} links to missing ${target}#${fragment}`);
       }
     }
+  }
+});
+
+test('requires resource links to target canonical resource cards', () => {
+  const resourceIds = new Set(
+    getTags(read('resources.html'), 'article')
+      .filter((tag) => tag.includes('data-resource'))
+      .map((tag) => getAttribute(tag, 'id'))
+  );
+  let resourceLinkCount = 0;
+
+  for (const fileName of ['experiences.html', 'journey.html']) {
+    const links = getTags(read(fileName), 'a').filter((tag) => tag.includes('data-resource-link'));
+    resourceLinkCount += links.length;
+
+    for (const link of links) {
+      assertCanonicalResourceLink(link, fileName, resourceIds);
+    }
+  }
+
+  assert.ok(resourceLinkCount >= resourceIds.size, 'resource-specific links need an explicit data-resource-link marker');
+
+  for (const invalidHref of ['resources.html', 'resources.html#', 'resources.html#goal-settng', 'resources.html#page-heading']) {
+    assert.throws(
+      () => assertCanonicalResourceLink(`<a data-resource-link href="${invalidHref}">`, 'regression fixture', resourceIds),
+      /resource link (?:needs one nonempty fragment|must target a canonical resource card)/,
+      `${invalidHref} must fail resource-link validation`
+    );
   }
 });
 
