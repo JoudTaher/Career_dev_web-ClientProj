@@ -184,6 +184,38 @@ test('defines approved U-M colors and inclusive interaction states', () => {
   assert.match(css, /@media\s*\(min-width:\s*70rem\)/i);
 });
 
+test('keeps images and media responsive', () => {
+  const css = read('css/style.css');
+  assert.match(css, /img\s*\{[^}]*max-width:\s*100%[^}]*height:\s*auto/si);
+  assert.match(css, /\.responsive-media\s*\{[^}]*max-width:\s*100%[^}]*aspect-ratio:/si);
+});
+
+test('uses mobile-first grids with tablet laptop and desktop enhancements', () => {
+  const css = read('css/style.css');
+  assert.match(css, /\.route-grid[\s\S]*?display:\s*grid/i);
+  assert.match(css, /\.experience-grid[\s\S]*?display:\s*grid/i);
+  assert.match(css, /\.resource-grid[\s\S]*?display:\s*grid/i);
+  assert.match(css, /@media\s*\(min-width:\s*48rem\)/i);
+  assert.match(css, /@media\s*\(min-width:\s*64rem\)/i);
+  assert.match(css, /@media\s*\(min-width:\s*70rem\)/i);
+});
+
+test('makes filter state perceivable beyond color', () => {
+  const css = read('css/style.css');
+  assert.match(css, /\.filter-buttons\s+button\[aria-pressed=['"]true['"]\]\s*\{[^}]*(?:border|box-shadow|outline|text-decoration):/si);
+  assert.match(css, /\[hidden\]\s*\{[^}]*display:\s*none/si);
+});
+
+test('supports forced colors without hiding required content at breakpoints', () => {
+  const css = read('css/style.css');
+  assert.match(css, /@media\s*\(forced-colors:\s*active\)/i);
+
+  const mediaRules = css.match(/@media\s*\(min-width:[\s\S]*?\n\}/gi) ?? [];
+  for (const mediaRule of mediaRules) {
+    assert.doesNotMatch(mediaRule, /(?:\.resource-card|\.journey-stage|\.experience-card)[^{]*\{[^}]*display:\s*none/si);
+  }
+});
+
 test('404 recovery links resolve from nested GitHub Pages routes', () => {
   const html = read('404.html');
   const baseTag = html.match(/<base[^>]+href="([^"]+)"/i);
