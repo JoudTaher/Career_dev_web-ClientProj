@@ -18,9 +18,23 @@ The proof of concept will contain five static pages:
 
 This satisfies the assignment requirement for a homepage, at least three subject pages, and a 404 page. The proof of concept will demonstrate representative content rather than reproduce every ELO course, program, and resource. Its structure will make future additions straightforward.
 
+## Site Requirements
+
+The same public website will work across smartphones, tablets, laptops, and desktop computers. Every supported device will provide the same information and core functionality; responsive layouts may rearrange content, but they will not hide or remove it.
+
+All text, images, videos, hyperlinks, and lists will remain readable, operable, and available at every supported screen size. In particular:
+
+- Text will reflow without horizontal page scrolling.
+- Images will scale within their containers and preserve useful alternative text.
+- Videos, when available, will use responsive containers, visible playback controls, no autoplay, and captions or a clearly identified transcript.
+- Hyperlinks will remain descriptive, keyboard accessible, and large enough to activate comfortably.
+- Ordered and unordered lists will retain semantic HTML and readable spacing.
+
+The finished site will be suitable for public deployment with GitHub Pages. It will not depend on authentication, private files, server-side code, or device-specific functionality.
+
 ## Technical Approach
 
-The site will use plain HTML5, CSS3, and JavaScript so it can be hosted directly on GitHub Pages.
+The site will use plain HTML5, CSS3, and JavaScript so it can be hosted publicly and directly on GitHub Pages.
 
 - Every page will be a standalone HTML file with consistent header, navigation, and footer markup.
 - `css/style.css` will contain mobile-first presentation rules and larger-screen enhancements.
@@ -130,6 +144,8 @@ The design will be modern but restrained and consistent with U-M brand guidance:
 
 The default layout will target small mobile screens. Content will use flexible widths, fluid type where appropriate, and single-column cards. Media queries will add horizontal navigation and multi-column layouts for tablets and desktops without removing content or functionality.
 
+Responsive verification will cover representative smartphone, tablet, laptop, and desktop widths. Layout changes will affect presentation only; text, images, video resources, hyperlinks, lists, navigation, and filtering will remain available at every width.
+
 Final photographs will use intrinsic width and height, `max-width: 100%`, and responsive image markup such as `srcset` and `sizes` where multiple approved image sizes are available. The placeholders cannot provide multiple real crops, but the markup and comments will identify what is needed when final assets are selected.
 
 ## Image Placeholders
@@ -158,6 +174,7 @@ The implementation will target WCAG 2.2 AA practices and common WAVE and Axe che
 - Descriptive link text and visible notice when links open new tabs.
 - Images with appropriate alt attributes and explicit dimensions.
 - Captions and transcripts identified for video resources.
+- Responsive video containers with user-controlled playback and no autoplay.
 - No information conveyed by color alone.
 - Content that remains usable at high zoom without two-dimensional page scrolling.
 - Reduced-motion and forced-color considerations.
@@ -195,7 +212,7 @@ Automated tests will use built-in Node.js functionality and verify:
 - Resource filter controls and script expose accessible state and a no-JavaScript fallback.
 - Mobile, tablet, and desktop responsive rules exist.
 
-After automated checks pass, the site will be served locally and reviewed at representative phone, tablet, and desktop widths. Manual checks will include keyboard navigation, filter behavior, focus order and visibility, menu state, high zoom, page overflow, image scaling, disabled JavaScript, and browser console errors. Axe or WAVE results will be run when the environment provides those browser tools; any unavailable audit will be reported rather than claimed.
+After automated checks pass, the site will be served locally and reviewed at representative smartphone (320–390px), tablet (768px), laptop (1024px), and desktop (1440px or wider) widths. Manual checks will include content parity, keyboard navigation, filter behavior, focus order and visibility, menu state, high zoom, page overflow, image and video scaling, disabled JavaScript, and browser console errors. Axe or WAVE results will be run when the environment provides those browser tools; any unavailable audit will be reported rather than claimed.
 
 ## Non-Goals
 
