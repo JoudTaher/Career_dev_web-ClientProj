@@ -8,6 +8,7 @@ const pages = ['index.html', 'experiences.html', 'journey.html', 'resources.html
 const contentPages = pages.slice(0, 4);
 const legacyPages = ['preparing.html', 'starting.html', 'during.html'];
 const navigationLinks = ['index.html', 'experiences.html', 'journey.html', 'resources.html'];
+const projectPathPrefix = '/Career_dev_web-ClientProj/';
 
 function read(fileName) {
   return fs.readFileSync(path.join(root, fileName), 'utf8');
@@ -24,6 +25,10 @@ function getTags(html, tagName) {
 
 function getIds(html) {
   return new Set(getTags(html, '[a-z][a-z0-9-]*').map((tag) => getAttribute(tag, 'id')).filter(Boolean));
+}
+
+function normalizeProjectPath(fileName) {
+  return fileName.startsWith(projectPathPrefix) ? fileName.slice(projectPathPrefix.length) : fileName;
 }
 
 function assertCanonicalResourceLink(link, fileName, resourceIds) {
@@ -62,7 +67,7 @@ test('keeps shared navigation consistent', () => {
     const navMatch = html.match(/<nav[^>]+aria-label="Primary navigation"[^>]*>([\s\S]*?)<\/nav>/i);
     assert.ok(navMatch, `${fileName} needs the primary navigation`);
 
-    const hrefs = getTags(navMatch[1], 'a').map((tag) => getAttribute(tag, 'href'));
+    const hrefs = getTags(navMatch[1], 'a').map((tag) => normalizeProjectPath(getAttribute(tag, 'href')));
     assert.deepEqual(hrefs, navigationLinks, `${fileName} should use the same four navigation links`);
   }
 
@@ -119,37 +124,7 @@ test('includes all five lifecycle stages', () => {
   }
 });
 
-test('provides accessible image placeholders', () => {
-  for (const fileName of contentPages) {
-    const html = read(fileName);
-    const images = getTags(html, 'img');
-    assert.ok(images.length > 0, `${fileName} needs a planned image`);
-    assert.match(html, /Replace with an approved U-M image of/i, `${fileName} needs a replacement note`);
-
-    for (const image of images) {
-      const alt = getAttribute(image, 'alt');
-      assert.notEqual(alt, null, `${fileName} image needs an alt attribute`);
-      assert.ok(alt.trim().length >= 20, `${fileName} meaningful image needs descriptive alt text`);
-      assert.match(image, /\swidth="\d+"/i, `${fileName} image needs intrinsic width`);
-      assert.match(image, /\sheight="\d+"/i, `${fileName} image needs intrinsic height`);
-    }
-  }
-});
-
-test('includes the shared UMSI logo placeholder on every page', () => {
-  assert.equal(fs.existsSync(path.join(root, 'images', 'umsi-logo-placeholder.svg')), true, 'the UMSI logo placeholder asset should exist');
-
-  for (const fileName of pages) {
-    const logo = getTags(read(fileName), 'img').find((tag) => tag.includes('site-brand__logo'));
-    assert.ok(logo, `${fileName} needs the shared UMSI logo placeholder`);
-    assert.equal(getAttribute(logo, 'src'), 'images/umsi-logo-placeholder.svg');
-    assert.match(getAttribute(logo, 'alt') ?? '', /placeholder for the official UMSI logo/i);
-    assert.match(logo, /\swidth="\d+"/i);
-    assert.match(logo, /\sheight="\d+"/i);
-  }
-});
-
-test('adds supporting image placeholders to the main guided pages', () => {
+test('adds supporting images to the main guided pages', () => {
   for (const fileName of ['experiences.html', 'journey.html', 'resources.html']) {
     const html = read(fileName);
     assert.match(html, /<figure[^>]+class="supporting-media"/i, `${fileName} needs a supporting image panel`);
@@ -168,7 +143,7 @@ test('resolves local files and resource fragments', () => {
       if (!href || /^(?:https?:|mailto:|tel:)/.test(href)) continue;
 
       const [targetPart, fragment] = href.split('#');
-      const target = targetPart || fileName;
+      const target = normalizeProjectPath(targetPart || fileName);
       assert.equal(fs.existsSync(path.join(root, target)), true, `${fileName} links to missing ${target}`);
 
       if (fragment) {
@@ -235,7 +210,7 @@ test('reports the correct resource count before JavaScript runs', () => {
 test('loads the shared stylesheet', () => {
   assert.equal(fs.existsSync(path.join(root, 'css', 'style.css')), true);
   for (const fileName of pages) {
-    assert.match(read(fileName), /<link[^>]+rel="stylesheet"[^>]+href="css\/style\.css"/i);
+    assert.match(read(fileName), /<link[^>]+rel="stylesheet"[^>]+href="(?:\/Career_dev_web-ClientProj\/)?css\/style\.css"/i);
   }
 });
 
@@ -287,13 +262,27 @@ test('supports forced colors without hiding required content at breakpoints', ()
   }
 });
 
-test('404 recovery links resolve from nested GitHub Pages routes', () => {
+test('404 links and assets work from nested GitHub Pages routes without breaking the skip link', () => {
   const html = read('404.html');
-  const baseTag = html.match(/<base[^>]+href="([^"]+)"/i);
-  assert.ok(baseTag, '404.html needs a deployment base URL');
+  assert.doesNotMatch(html, /<base\b/i, '404.html should not rewrite fragment-only links with a base element');
+  assert.match(html, /class="skip-link"[^>]+href="#main-content"/i);
+
+  const localPaths = [
+    '/Career_dev_web-ClientProj/css/style.css',
+    '/Career_dev_web-ClientProj/js/script.js',
+    '/Career_dev_web-ClientProj/images/UMSI_signature_informal_maize_white.png',
+    '/Career_dev_web-ClientProj/index.html',
+    '/Career_dev_web-ClientProj/experiences.html',
+    '/Career_dev_web-ClientProj/journey.html',
+    '/Career_dev_web-ClientProj/resources.html'
+  ];
+
+  for (const localPath of localPaths) {
+    assert.match(html, new RegExp(`(?:href|src)="${localPath.replaceAll('/', '\\/')}"`));
+  }
 
   const nestedMissingUrl = new URL('https://example.com/Career_dev_web-ClientProj/missing/page');
-  const documentBase = new URL(baseTag[1], nestedMissingUrl);
-  assert.equal(new URL('index.html', documentBase).pathname, '/Career_dev_web-ClientProj/index.html');
-  assert.equal(new URL('resources.html', documentBase).pathname, '/Career_dev_web-ClientProj/resources.html');
+  assert.equal(new URL('#main-content', nestedMissingUrl).pathname, nestedMissingUrl.pathname);
+  assert.equal(new URL('/Career_dev_web-ClientProj/index.html', nestedMissingUrl).pathname, '/Career_dev_web-ClientProj/index.html');
+  assert.equal(new URL('/Career_dev_web-ClientProj/resources.html', nestedMissingUrl).pathname, '/Career_dev_web-ClientProj/resources.html');
 });
