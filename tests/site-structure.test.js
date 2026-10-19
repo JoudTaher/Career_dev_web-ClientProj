@@ -167,6 +167,15 @@ test('keeps every resource definition canonical', () => {
   }
 });
 
+test('reports the correct resource count before JavaScript runs', () => {
+  const html = read('resources.html');
+  const resourceCount = getTags(html, 'article').filter((tag) => tag.includes('data-resource')).length;
+  const status = html.match(/data-filter-status[^>]*>Showing (\d+) resources\./i);
+
+  assert.ok(status, 'resources.html needs an initial filter result count');
+  assert.equal(Number(status[1]), resourceCount, 'the no-JavaScript count should match the resource cards');
+});
+
 test('loads the shared stylesheet', () => {
   assert.equal(fs.existsSync(path.join(root, 'css', 'style.css')), true);
   for (const fileName of pages) {
