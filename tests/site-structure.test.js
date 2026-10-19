@@ -61,6 +61,12 @@ test('provides accessible shared page structure', () => {
   }
 });
 
+test('contains no unresolved merge conflict markers', () => {
+  for (const fileName of pages) {
+    assert.doesNotMatch(read(fileName), /^(?:<<<<<<<|=======|>>>>>>>)/m, `${fileName} contains an unresolved merge conflict`);
+  }
+});
+
 test('keeps shared navigation consistent', () => {
   for (const fileName of pages) {
     const html = read(fileName);
@@ -129,6 +135,22 @@ test('adds supporting images to the main guided pages', () => {
     const html = read(fileName);
     assert.match(html, /<figure[^>]+class="supporting-media"/i, `${fileName} needs a supporting image panel`);
     assert.ok(getTags(html, 'img').length >= 3, `${fileName} should include a logo, hero image, and supporting image`);
+  }
+});
+
+test('uses lowercase hyphenated image filenames everywhere', () => {
+  const imageFileNames = fs.readdirSync(path.join(root, 'images')).filter((fileName) => /\.(?:jpe?g|png|gif|svg|webp)$/i.test(fileName));
+
+  for (const imageFileName of imageFileNames) {
+    assert.match(imageFileName, /^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:jpe?g|png|gif|svg|webp)$/, `${imageFileName} must use lowercase kebab-case`);
+  }
+
+  for (const fileName of pages) {
+    for (const image of getTags(read(fileName), 'img')) {
+      const source = normalizeProjectPath(getAttribute(image, 'src'));
+      assert.match(source, /^images\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:jpe?g|png|gif|svg|webp)$/, `${fileName} has a noncompliant image path`);
+      assert.equal(fs.existsSync(path.join(root, source)), true, `${fileName} references missing ${source}`);
+    }
   }
 });
 
@@ -207,10 +229,16 @@ test('reports the correct resource count before JavaScript runs', () => {
   assert.equal(Number(status[1]), resourceCount, 'the no-JavaScript count should match the resource cards');
 });
 
-test('loads the shared stylesheet', () => {
+test('loads the HTML5 reset before the shared stylesheet', () => {
+  assert.equal(fs.existsSync(path.join(root, 'css', 'html5reset.css')), true);
   assert.equal(fs.existsSync(path.join(root, 'css', 'style.css')), true);
+
   for (const fileName of pages) {
-    assert.match(read(fileName), /<link[^>]+rel="stylesheet"[^>]+href="(?:\/Career_dev_web-ClientProj\/)?css\/style\.css"/i);
+    const stylesheetPaths = getTags(read(fileName), 'link')
+      .filter((tag) => getAttribute(tag, 'rel') === 'stylesheet')
+      .map((tag) => normalizeProjectPath(getAttribute(tag, 'href')));
+
+    assert.deepEqual(stylesheetPaths, ['css/html5reset.css', 'css/style.css'], `${fileName} must load reset then site styles`);
   }
 });
 
@@ -268,9 +296,10 @@ test('404 links and assets work from nested GitHub Pages routes without breaking
   assert.match(html, /class="skip-link"[^>]+href="#main-content"/i);
 
   const localPaths = [
+    '/Career_dev_web-ClientProj/css/html5reset.css',
     '/Career_dev_web-ClientProj/css/style.css',
     '/Career_dev_web-ClientProj/js/script.js',
-    '/Career_dev_web-ClientProj/images/UMSI_signature_informal_maize_white.png',
+    '/Career_dev_web-ClientProj/images/umsi-signature-informal-maize-white.png',
     '/Career_dev_web-ClientProj/index.html',
     '/Career_dev_web-ClientProj/experiences.html',
     '/Career_dev_web-ClientProj/journey.html',
