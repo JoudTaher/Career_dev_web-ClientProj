@@ -1,12 +1,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { initializeSite } = require('../js/script.js');
+const { initializeResourceFilters, initializeSite } = require('../js/script.js');
 
 class FakeElement {
   constructor() {
     this.hidden = false;
     this.textContent = '';
     this.focused = false;
+    this.dataset = {};
     this.attributes = new Map();
     this.listeners = new Map();
   }
@@ -31,6 +32,57 @@ class FakeElement {
 
   focus() {
     this.focused = true;
+  }
+}
+
+class FakeFilterDocument {
+  constructor() {
+    this.library = new FakeElement();
+    this.status = new FakeElement();
+    this.buttons = [
+      this.createButton('stage', 'all', 'true'),
+      this.createButton('stage', 'preparing'),
+      this.createButton('stage', 'during'),
+      this.createButton('type', 'all', 'true'),
+      this.createButton('type', 'worksheet'),
+      this.createButton('type', 'guide')
+    ];
+    this.cards = [
+      this.createCard({ stage: 'preparing', experience: 'client', type: 'worksheet' }),
+      this.createCard({ stage: 'during', experience: 'client community', type: 'guide' }),
+      this.createCard({ stage: 'during', experience: 'research', type: 'worksheet' }),
+      this.createCard({ stage: '', experience: 'client', type: 'guide' })
+    ];
+  }
+
+  createButton(group, value, pressed = 'false') {
+    const button = new FakeElement();
+    button.dataset.filterGroup = group;
+    button.dataset.filterValue = value;
+    button.setAttribute('aria-pressed', pressed);
+    return button;
+  }
+
+  createCard(data) {
+    const card = new FakeElement();
+    card.dataset = { ...data };
+    return card;
+  }
+
+  querySelector(selector) {
+    if (selector === '[data-resource-library]') return this.library;
+    if (selector === '[data-filter-status]') return this.status;
+    return null;
+  }
+
+  querySelectorAll(selector) {
+    if (selector === '[data-filter-group][data-filter-value]') return this.buttons;
+    if (selector === '[data-resource]') return this.cards;
+    return [];
+  }
+
+  button(group, value) {
+    return this.buttons.find((button) => button.dataset.filterGroup === group && button.dataset.filterValue === value);
   }
 }
 
@@ -169,4 +221,54 @@ test('exits safely when optional elements are absent', () => {
 
   assert.doesNotThrow(() => initializeSite(documentObject, windowObject));
   assert.deepEqual(documentObject.years.map((element) => element.textContent), ['2042', '2042']);
+});
+
+test('filters resources by one group', () => {
+  const documentObject = new FakeFilterDocument();
+  initializeResourceFilters(documentObject);
+
+  documentObject.button('stage', 'preparing').dispatch('click');
+
+  assert.deepEqual(documentObject.cards.map((card) => card.hidden), [false, true, true, true]);
+});
+
+test('combines active filter groups', () => {
+  const documentObject = new FakeFilterDocument();
+  initializeResourceFilters(documentObject);
+
+  documentObject.button('stage', 'during').dispatch('click');
+  documentObject.button('type', 'guide').dispatch('click');
+
+  assert.deepEqual(documentObject.cards.map((card) => card.hidden), [true, false, true, true]);
+});
+
+test('show all resets one group', () => {
+  const documentObject = new FakeFilterDocument();
+  initializeResourceFilters(documentObject);
+
+  documentObject.button('stage', 'during').dispatch('click');
+  documentObject.button('stage', 'all').dispatch('click');
+
+  assert.deepEqual(documentObject.cards.map((card) => card.hidden), [false, false, false, true]);
+});
+
+test('updates aria-pressed and the live result count', () => {
+  const documentObject = new FakeFilterDocument();
+  initializeResourceFilters(documentObject);
+
+  assert.equal(documentObject.status.textContent, 'Showing 3 resources.');
+  documentObject.button('type', 'worksheet').dispatch('click');
+
+  assert.equal(documentObject.button('type', 'worksheet').getAttribute('aria-pressed'), 'true');
+  assert.equal(documentObject.button('type', 'all').getAttribute('aria-pressed'), 'false');
+  assert.equal(documentObject.status.textContent, 'Showing 2 resources.');
+});
+
+test('leaves the page safe when filter markup is absent', () => {
+  const documentObject = {
+    querySelector() { return null; },
+    querySelectorAll() { return []; }
+  };
+
+  assert.doesNotThrow(() => initializeResourceFilters(documentObject));
 });
