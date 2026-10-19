@@ -43,6 +43,11 @@ class FakeFilterDocument {
       this.createButton('stage', 'all', 'true'),
       this.createButton('stage', 'preparing'),
       this.createButton('stage', 'during'),
+      this.createButton('experience', 'all', 'true'),
+      this.createButton('experience', 'client'),
+      this.createButton('experience', 'community'),
+      this.createButton('experience', 'global'),
+      this.createButton('experience', 'research'),
       this.createButton('type', 'all', 'true'),
       this.createButton('type', 'worksheet'),
       this.createButton('type', 'guide')
@@ -232,14 +237,44 @@ test('filters resources by one group', () => {
   assert.deepEqual(documentObject.cards.map((card) => card.hidden), [false, true, true, true]);
 });
 
-test('combines active filter groups', () => {
+test('combines stage experience and resource type filters', () => {
   const documentObject = new FakeFilterDocument();
   initializeResourceFilters(documentObject);
 
   documentObject.button('stage', 'during').dispatch('click');
+  documentObject.button('experience', 'community').dispatch('click');
   documentObject.button('type', 'guide').dispatch('click');
 
   assert.deepEqual(documentObject.cards.map((card) => card.hidden), [true, false, true, true]);
+  assert.equal(documentObject.status.textContent, 'Showing 1 resource.');
+});
+
+test('supports multi-value card categories and a zero-result combination', () => {
+  const documentObject = new FakeFilterDocument();
+  initializeResourceFilters(documentObject);
+
+  documentObject.button('experience', 'community').dispatch('click');
+  assert.deepEqual(documentObject.cards.map((card) => card.hidden), [true, false, true, true]);
+
+  documentObject.button('experience', 'global').dispatch('click');
+  documentObject.button('type', 'guide').dispatch('click');
+  assert.deepEqual(documentObject.cards.map((card) => card.hidden), [true, true, true, true]);
+  assert.equal(documentObject.status.textContent, 'Showing 0 resources.');
+});
+
+test('clears one filter group without changing the other active groups', () => {
+  const documentObject = new FakeFilterDocument();
+  initializeResourceFilters(documentObject);
+
+  documentObject.button('stage', 'during').dispatch('click');
+  documentObject.button('experience', 'research').dispatch('click');
+  documentObject.button('type', 'worksheet').dispatch('click');
+  documentObject.button('experience', 'all').dispatch('click');
+
+  assert.deepEqual(documentObject.cards.map((card) => card.hidden), [true, true, false, true]);
+  assert.equal(documentObject.button('experience', 'all').getAttribute('aria-pressed'), 'true');
+  assert.equal(documentObject.button('stage', 'during').getAttribute('aria-pressed'), 'true');
+  assert.equal(documentObject.button('type', 'worksheet').getAttribute('aria-pressed'), 'true');
 });
 
 test('show all resets one group', () => {

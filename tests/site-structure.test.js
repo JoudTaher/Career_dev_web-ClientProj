@@ -136,6 +136,27 @@ test('provides accessible image placeholders', () => {
   }
 });
 
+test('includes the shared UMSI logo placeholder on every page', () => {
+  assert.equal(fs.existsSync(path.join(root, 'images', 'umsi-logo-placeholder.svg')), true, 'the UMSI logo placeholder asset should exist');
+
+  for (const fileName of pages) {
+    const logo = getTags(read(fileName), 'img').find((tag) => tag.includes('site-brand__logo'));
+    assert.ok(logo, `${fileName} needs the shared UMSI logo placeholder`);
+    assert.equal(getAttribute(logo, 'src'), 'images/umsi-logo-placeholder.svg');
+    assert.match(getAttribute(logo, 'alt') ?? '', /placeholder for the official UMSI logo/i);
+    assert.match(logo, /\swidth="\d+"/i);
+    assert.match(logo, /\sheight="\d+"/i);
+  }
+});
+
+test('adds supporting image placeholders to the main guided pages', () => {
+  for (const fileName of ['experiences.html', 'journey.html', 'resources.html']) {
+    const html = read(fileName);
+    assert.match(html, /<figure[^>]+class="supporting-media"/i, `${fileName} needs a supporting image panel`);
+    assert.ok(getTags(html, 'img').length >= 3, `${fileName} should include a logo, hero image, and supporting image`);
+  }
+});
+
 test('resolves local files and resource fragments', () => {
   const idsByPage = new Map(pages.map((fileName) => [fileName, getIds(read(fileName))]));
 
@@ -222,6 +243,12 @@ test('defines approved U-M colors and inclusive interaction states', () => {
   const css = read('css/style.css');
   assert.match(css, /--color-blue:\s*#00274c\b/i);
   assert.match(css, /--color-maize:\s*#ffcb05\b/i);
+  assert.match(css, /--color-tappan-red:\s*#9a3324\b/i);
+  assert.match(css, /--color-ross-orange:\s*#d86018\b/i);
+  assert.match(css, /--color-rackham-green:\s*#75988d\b/i);
+  assert.match(css, /--color-taubman-teal:\s*#00b2a9\b/i);
+  assert.match(css, /--color-arboretum-blue:\s*#2f65a7\b/i);
+  assert.match(css, /--color-matthaei-violet:\s*#575294\b/i);
   assert.match(css, /:focus-visible\s*\{/i);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/i);
   assert.match(css, /@media\s*\(min-width:\s*48rem\)/i);

@@ -28,7 +28,7 @@ function initializeResourceFilters(documentObject) {
       if (matches) visibleCount += 1;
     }
 
-    if (status) status.textContent = `Showing ${visibleCount} resources.`;
+    if (status) status.textContent = `Showing ${visibleCount} ${visibleCount === 1 ? 'resource' : 'resources'}.`;
   }
 
   for (const button of buttons) {

@@ -48,7 +48,7 @@ Tests cover page structure, internal files and fragments, canonical resources, i
 
 ## Images
 
-`images/placeholder.svg` is used until approved U-M photographs are selected. Each image has a nearby HTML comment describing the intended photograph. Replace the placeholder and review the alt text so it describes the final image accurately.
+`images/placeholder.svg` is used until approved U-M photographs are selected. Each image has a nearby HTML comment describing the intended photograph. `images/umsi-logo-placeholder.svg` marks where the approved official UMSI logo should be added. Replace each placeholder and review its alt text so it accurately describes the final asset.
 
 ## Publishing
 
