@@ -609,6 +609,10 @@ h3 {
   .resource-list > li {
     padding: 1.75rem;
   }
+
+  .stage-card {
+    padding-top: 3.75rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

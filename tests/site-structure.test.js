@@ -128,3 +128,25 @@ test('adds tablet and desktop responsive rules', () => {
   assert.match(css, /@media\s*\(min-width:\s*48rem\)/i);
   assert.match(css, /@media\s*\(min-width:\s*70rem\)/i);
 });
+
+test('404 recovery links resolve from nested GitHub Pages routes', () => {
+  const html = readPage('404.html');
+  const baseTag = html.match(/<base[^>]+href="([^"]+)"/i);
+  assert.ok(baseTag, '404.html needs a deployment base URL');
+
+  const nestedMissingUrl = new URL('https://example.com/Career_dev_web-ClientProj/missing/page');
+  const documentBase = new URL(baseTag[1], nestedMissingUrl);
+
+  assert.equal(new URL('index.html', documentBase).pathname, '/Career_dev_web-ClientProj/index.html');
+  assert.equal(new URL('css/style.css', documentBase).pathname, '/Career_dev_web-ClientProj/css/style.css');
+  assert.equal(new URL('js/script.js', documentBase).pathname, '/Career_dev_web-ClientProj/js/script.js');
+});
+
+test('preserves stage-card badge clearance at desktop widths', () => {
+  const css = fs.readFileSync(path.join(root, 'css', 'style.css'), 'utf8');
+  const desktopStart = css.indexOf('@media (min-width: 70rem)');
+  assert.notEqual(desktopStart, -1, 'desktop media query should exist');
+
+  const desktopCss = css.slice(desktopStart);
+  assert.match(desktopCss, /\.stage-card\s*\{[^}]*padding-top:\s*3\.75rem;/i);
+});
