@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse representative ELO worksheets, templates, guides, checklists, videos, and reflection activities.">
+  <title>Resource Library | ELO Resource Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-brand" href="index.html" aria-label="Engaged Learning Resource Hub home">
+        <span class="site-brand__school">University of Michigan School of Information</span>
+        <span class="site-brand__name">Engaged Learning Resource Hub</span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="true" aria-controls="primary-navigation" hidden><span aria-hidden="true">☰</span> Menu</button>
+      <nav class="site-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul class="site-nav__list">
+          <li><a class="site-nav__link" href="index.html">Home</a></li>
+          <li><a class="site-nav__link" href="experiences.html">Experiences</a></li>
+          <li><a class="site-nav__link" href="journey.html">Journey</a></li>
+          <li><a class="site-nav__link" href="resources.html" aria-current="page">Resource Library</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero hero--page" aria-labelledby="page-heading">
+      <div class="hero__content">
+        <p class="eyebrow">One place, many paths</p>
+        <h1 id="page-heading">Resource Library</h1>
+        <p class="hero__lead">Find practical support by stage, experience, or format. Each resource lives here once, even when several pages link to it.</p>
+      </div>
+      <figure class="hero__media">
+        <!-- Replace with an approved U-M image of students using worksheets, project plans, and digital learning resources. -->
+        <img src="images/placeholder.svg" width="1200" height="800" alt="UMSI students using project worksheets and digital learning resources during a team meeting">
+        <figcaption>Image placeholder: select an approved U-M photograph showing students using practical project resources.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section library-intro" aria-labelledby="library-note">
+      <div class="notice" id="library-note">
+        <h2>About these resources</h2>
+        <p>This proof of concept demonstrates how ELO materials can be organized. Items labeled “Prototype resource” are useful page-based examples, not official ELO downloads. Official materials can replace them later without changing the navigation.</p>
+      </div>
+    </section>
+
+    <section class="section section--tinted filters" aria-labelledby="filter-heading" data-resource-library>
+      <div class="section__heading"><p class="eyebrow">Narrow the list</p><h2 id="filter-heading">Filter resources</h2><p>Choose one option in any group. Choose “All” to clear that group.</p></div>
+      <div class="filter-groups">
+        <fieldset class="filter-group"><legend>Stage</legend><div class="filter-buttons">
+          <button type="button" data-filter-group="stage" data-filter-value="all" aria-pressed="true">All stages</button>
+          <button type="button" data-filter-group="stage" data-filter-value="preparing" aria-pressed="false">Preparing</button>
+          <button type="button" data-filter-group="stage" data-filter-value="starting" aria-pressed="false">Starting</button>
+          <button type="button" data-filter-group="stage" data-filter-value="during" aria-pressed="false">During</button>
+          <button type="button" data-filter-group="stage" data-filter-value="ending" aria-pressed="false">Ending</button>
+          <button type="button" data-filter-group="stage" data-filter-value="after" aria-pressed="false">After</button>
+        </div></fieldset>
+        <fieldset class="filter-group"><legend>Experience</legend><div class="filter-buttons">
+          <button type="button" data-filter-group="experience" data-filter-value="all" aria-pressed="true">All experiences</button>
+          <button type="button" data-filter-group="experience" data-filter-value="client" aria-pressed="false">Client-based</button>
+          <button type="button" data-filter-group="experience" data-filter-value="community" aria-pressed="false">Community</button>
+          <button type="button" data-filter-group="experience" data-filter-value="global" aria-pressed="false">Global</button>
+          <button type="button" data-filter-group="experience" data-filter-value="research" aria-pressed="false">Research</button>
+          <button type="button" data-filter-group="experience" data-filter-value="entrepreneurship" aria-pressed="false">Entrepreneurship</button>
+        </div></fieldset>
+        <fieldset class="filter-group"><legend>Resource type</legend><div class="filter-buttons">
+          <button type="button" data-filter-group="type" data-filter-value="all" aria-pressed="true">All types</button>
+          <button type="button" data-filter-group="type" data-filter-value="worksheet" aria-pressed="false">Worksheets</button>
+          <button type="button" data-filter-group="type" data-filter-value="template" aria-pressed="false">Templates</button>
+          <button type="button" data-filter-group="type" data-filter-value="guide" aria-pressed="false">Guides</button>
+          <button type="button" data-filter-group="type" data-filter-value="checklist" aria-pressed="false">Checklists</button>
+          <button type="button" data-filter-group="type" data-filter-value="reflection" aria-pressed="false">Reflection</button>
+          <button type="button" data-filter-group="type" data-filter-value="module" aria-pressed="false">Modules</button>
+          <button type="button" data-filter-group="type" data-filter-value="video" aria-pressed="false">Videos</button>
+          <button type="button" data-filter-group="type" data-filter-value="example" aria-pressed="false">Examples</button>
+        </div></fieldset>
+      </div>
+      <noscript><p class="notice">Filtering requires JavaScript. All resources are displayed below.</p></noscript>
+      <p class="filter-status" data-filter-status aria-live="polite">Showing 16 resources.</p>
+    </section>
+
+    <section class="section" aria-labelledby="resource-results">
+      <div class="section__heading"><p class="eyebrow">Available support</p><h2 id="resource-results">Resources</h2></div>
+      <div class="resource-grid">
+        <article class="resource-card" id="goal-setting" data-resource data-stage="preparing" data-experience="client community global research entrepreneurship" data-type="worksheet">
+          <div class="resource-card__meta"><span>Preparing</span><span>Worksheet</span></div><h3>Goal-setting worksheet</h3><p>Write two or three specific learning goals and connect each one to an action and evidence of progress.</p><h4>Prompts</h4><ul><li>What do I want to learn or practice?</li><li>How will I contribute?</li><li>What evidence will show growth?</li></ul><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="partner-research" data-resource data-stage="preparing" data-experience="client community global research" data-type="checklist">
+          <div class="resource-card__meta"><span>Preparing</span><span>Checklist</span></div><h3>Partner and context checklist</h3><p>Separate confirmed information from assumptions before meeting a partner or entering a community.</p><ul><li>Review the organization’s mission and audiences.</li><li>Identify what you still need to ask.</li><li>Note relevant history, power, and community knowledge.</li></ul><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="cultural-awareness" data-resource data-stage="preparing" data-experience="community global" data-type="module">
+          <div class="resource-card__meta"><span>Preparing</span><span>Learning module</span></div><h3>Cultural awareness learning module</h3><p>A short self-guided sequence for recognizing assumptions, learning local context, and approaching differences with humility.</p><ol><li>Notice your starting assumptions.</li><li>Seek context from credible local sources.</li><li>Plan questions that invite correction.</li></ol><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="team-agreement" data-resource data-stage="starting" data-experience="client community global research entrepreneurship" data-type="template">
+          <div class="resource-card__meta"><span>Starting</span><span>Template</span></div><h3>Team agreement template</h3><p>Record roles, access needs, working preferences, meeting routines, decision rules, and how the team will respond to missed commitments.</p><ul><li>Communication channels and response times.</li><li>How decisions and disagreements are handled.</li><li>When the agreement will be reviewed.</li></ul><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="project-plan" data-resource data-stage="starting during" data-experience="client community research entrepreneurship" data-type="template worksheet">
+          <div class="resource-card__meta"><span>Starting / During</span><span>Planning template</span></div><h3>Project plan worksheet</h3><p>Keep activities, owners, dependencies, milestones, review dates, and open questions in one shared location.</p><p><strong>Minimum fields:</strong> task, owner, due date, status, dependency, and partner review.</p><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="partner-communication" data-resource data-stage="starting during" data-experience="client community global" data-type="guide">
+          <div class="resource-card__meta"><span>Starting / During</span><span>How-to guide</span></div><h3>Partner communication guide</h3><p>Choose one primary channel, document decisions, send concise updates, and raise questions before they become deadline risks.</p><p><strong>Update pattern:</strong> progress, next action, question, risk, owner.</p><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="client-communication-video" data-resource data-stage="starting" data-experience="client community" data-type="video">
+          <div class="resource-card__meta"><span>Starting</span><span>Short video</span></div><h3>Client communication video</h3><p>This space demonstrates where an approved ELO video, captions, and transcript would live.</p><div class="responsive-media video-placeholder" role="group" aria-label="Video resource placeholder"><p><strong>Video placeholder</strong></p><p>Add an approved video with captions and provide a transcript link below it.</p></div><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="weekly-progress" data-resource data-stage="during" data-experience="client community global research entrepreneurship" data-type="checklist">
+          <div class="resource-card__meta"><span>During</span><span>Checklist</span></div><h3>Weekly progress checklist</h3><p>Use a five-minute review to keep the plan current and make risks visible.</p><ul><li>What was completed?</li><li>What is next, and who owns it?</li><li>What changed or is at risk?</li><li>What input is needed?</li></ul><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="navigating-conflict" data-resource data-stage="during" data-experience="client community global research entrepreneurship" data-type="guide">
+          <div class="resource-card__meta"><span>During</span><span>How-to guide</span></div><h3>Navigating conflict guide</h3><p>Return to the shared goal, describe the specific issue, listen for different needs, and agree on one observable next action.</p><p><strong>Start with:</strong> “I noticed… The effect is… Can we talk about…?” Seek instructor or ELO support when the team cannot resolve an issue safely.</p><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="feedback-conversation" data-resource data-stage="during" data-experience="client community global research entrepreneurship" data-type="guide">
+          <div class="resource-card__meta"><span>During</span><span>Conversation guide</span></div><h3>Feedback conversation guide</h3><p>Describe the situation and effect, ask for the other perspective, agree on a change, and choose when to check back.</p><p>Keep feedback specific to work or behavior and give the other person time to respond.</p><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="midpoint-reflection" data-resource data-stage="during" data-experience="client community global research entrepreneurship" data-type="reflection">
+          <div class="resource-card__meta"><span>During</span><span>Reflection</span></div><h3>Midpoint reflection activity</h3><p>Pause while there is still time to change your approach.</p><ul><li>What am I learning?</li><li>What is challenging my assumptions?</li><li>Whose input has shaped the work?</li><li>What will I try differently next?</li></ul><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="final-handoff" data-resource data-stage="ending" data-experience="client community research entrepreneurship" data-type="checklist">
+          <div class="resource-card__meta"><span>Ending</span><span>Checklist</span></div><h3>Final handoff checklist</h3><p>Make the work understandable and usable after the student team leaves.</p><ul><li>Confirm file names, formats, access, and ownership.</li><li>Document decisions, limitations, and unfinished work.</li><li>Identify a contact and agreed next steps.</li></ul><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="closing-relationships" data-resource data-stage="ending" data-experience="client community global research entrepreneurship" data-type="guide">
+          <div class="resource-card__meta"><span>Ending</span><span>How-to guide</span></div><h3>Closing relationships guide</h3><p>Thank collaborators, name their contributions, confirm what can be shared, and agree on whether future contact is welcome.</p><p>A strong closing is clear about boundaries and does not promise support the team cannot provide.</p><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="experience-evaluation" data-resource data-stage="ending" data-experience="client community global research entrepreneurship" data-type="reflection worksheet">
+          <div class="resource-card__meta"><span>Ending</span><span>Evaluation</span></div><h3>Experience evaluation activity</h3><p>Evaluate the process, learning, relationship, deliverables, and impact from more than one perspective.</p><p><strong>Ask:</strong> What worked, what caused difficulty, who benefited, and what should change next time?</p><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="portfolio-story" data-resource data-stage="after" data-experience="client community global research entrepreneurship" data-type="worksheet example">
+          <div class="resource-card__meta"><span>After</span><span>Worksheet</span></div><h3>Portfolio story worksheet</h3><p>Turn the experience into a concise story without exposing confidential partner information.</p><ol><li>Context and audience.</li><li>Your role and decisions.</li><li>Process and collaboration.</li><li>Outcome, evidence, and learning.</li></ol><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="resume-language" data-resource data-stage="after" data-experience="client community global research entrepreneurship" data-type="example">
+          <div class="resource-card__meta"><span>After</span><span>Example</span></div><h3>Resume language examples</h3><p>Use an action, method, audience, and outcome to describe your contribution accurately.</p><p><strong>Pattern:</strong> “Collaborated with [audience] to [action] using [method], resulting in [evidence or outcome].”</p><p class="resource-label">Prototype resource</p>
+        </article>
+        <article class="resource-card" id="relationship-follow-up" data-resource data-stage="after" data-experience="client community global research entrepreneurship" data-type="checklist">
+          <div class="resource-card__meta"><span>After</span><span>Checklist</span></div><h3>Professional follow-up checklist</h3><p>Maintain relationships respectfully and only through the channels and expectations established with the partner.</p><ul><li>Send a concise thank-you.</li><li>Share promised materials.</li><li>Ask before using names or work publicly.</li><li>Record an appropriate future follow-up date.</li></ul><p class="resource-label">Prototype resource</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div><p class="site-footer__title">UMSI Engaged Learning Office</p><p>Guidance and resources for learning with communities and partners.</p></div>
+      <ul class="site-footer__links"><li><a href="https://www.si.umich.edu/programs/engaged-learning/about-engaged-learning-office" target="_blank" rel="noopener noreferrer">About ELO <span class="external-note">(new tab)</span></a></li><li><a href="https://www.si.umich.edu/about-umsi/contact-us" target="_blank" rel="noopener noreferrer">Contact UMSI <span class="external-note">(new tab)</span></a></li></ul>
+    </div>
+    <p class="site-footer__copyright">© <span data-current-year>2026</span> Regents of the University of Michigan</p>
+  </footer>
+</body>
+</html>
