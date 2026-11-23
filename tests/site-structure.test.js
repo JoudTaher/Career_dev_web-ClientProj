@@ -86,6 +86,13 @@ test('provides accessible shared page structure', () => {
   }
 });
 
+test('marks the shared footer title as a heading', () => {
+  for (const fileName of pages) {
+    const html = read(fileName);
+    assert.match(html, /<h2\s+class="site-footer__title">UMSI Engaged Learning Office<\/h2>/i, `${fileName} needs a semantic footer heading`);
+  }
+});
+
 test('contains no unresolved merge conflict markers', () => {
   for (const fileName of pages) {
     assert.doesNotMatch(read(fileName), /^(?:<<<<<<<|=======|>>>>>>>)/m, `${fileName} contains an unresolved merge conflict`);
