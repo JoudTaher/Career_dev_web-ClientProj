@@ -42,6 +42,20 @@ function getMediaBlock(css, minWidth) {
   return nextMedia === -1 ? css.slice(start) : css.slice(start, start + startMatch[0].length + nextMedia);
 }
 
+function contrastRatio(foreground, background) {
+  const luminance = (hex) => {
+    const channels = hex.match(/[a-f\d]{2}/gi).map((channel) => Number.parseInt(channel, 16) / 255);
+    const linear = channels.map((channel) => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4);
+    return (0.2126 * linear[0]) + (0.7152 * linear[1]) + (0.0722 * linear[2]);
+  };
+
+  const foregroundLuminance = luminance(foreground);
+  const backgroundLuminance = luminance(background);
+  const lighter = Math.max(foregroundLuminance, backgroundLuminance);
+  const darker = Math.min(foregroundLuminance, backgroundLuminance);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 function assertCanonicalResourceLink(link, fileName, resourceIds) {
   const href = getAttribute(link, 'href');
   assert.match(href ?? '', /^resources\.html#[a-z0-9-]+$/, `${fileName} resource link needs one nonempty fragment`);
@@ -316,6 +330,16 @@ test('creates meaningful desktop structures on every page at 64rem', () => {
   assert.match(resourceHtml, /data-resource-library/i);
   assert.match(resourceHtml, /data-filter-group="stage"/i);
   assert.match(resourceHtml, /data-filter-status[^>]+aria-live="polite"/i);
+});
+
+test('keeps the decorative 404 text readable against its white background', () => {
+  const css = read('css/style.css');
+  const rule = css.match(/\.error-page__code\s*\{([^}]*)\}/i)?.[1] ?? '';
+  const colorVariable = rule.match(/(?:^|;)\s*color:\s*var\((--[a-z-]+)\)/i)?.[1];
+  const foreground = css.match(new RegExp(`${colorVariable}:\\s*(#[a-f\\d]{6})`, 'i'))?.[1];
+
+  assert.ok(foreground, 'the 404 text needs a resolvable foreground color');
+  assert.ok(contrastRatio(foreground, '#ffffff') >= 4.5, 'the 404 text needs at least 4.5:1 contrast against white');
 });
 
 test('makes filter state perceivable beyond color', () => {

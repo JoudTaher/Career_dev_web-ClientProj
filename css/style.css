@@ -811,11 +811,11 @@ article[id] {
 
 .error-page__code {
   margin-bottom: 0;
-  color: var(--color-maize);
+  color: var(--color-blue);
   font-size: clamp(5rem, 25vw, 10rem);
   font-weight: 900;
   line-height: 0.9;
-  text-shadow: 0.2rem 0.2rem 0 var(--color-blue);
+  text-shadow: 0.2rem 0.2rem 0 var(--color-maize);
 }
 
 .error-links {
