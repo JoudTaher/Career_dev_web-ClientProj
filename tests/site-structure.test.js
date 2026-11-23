@@ -348,6 +348,18 @@ test('makes filter state perceivable beyond color', () => {
   assert.match(css, /\[hidden\]\s*\{[^}]*display:\s*none/si);
 });
 
+test('exposes resource filter group names as level-three headings', () => {
+  const html = read('resources.html');
+  const legends = html.match(/<legend\b[^>]*>[\s\S]*?<\/legend>/gi) ?? [];
+
+  assert.equal(legends.length, 3, 'the resource filters need three labeled groups');
+  for (const legend of legends) {
+    const heading = getTags(legend, 'span')[0] ?? '';
+    assert.equal(getAttribute(heading, 'role'), 'heading', 'each visible legend needs heading semantics');
+    assert.equal(getAttribute(heading, 'aria-level'), '3', 'filter group headings belong below the h2');
+  }
+});
+
 test('supports forced colors without hiding required content at breakpoints', () => {
   const css = read('css/style.css');
   assert.match(css, /@media\s*\(forced-colors:\s*active\)/i);
