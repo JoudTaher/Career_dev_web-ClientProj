@@ -31,6 +31,17 @@ function normalizeProjectPath(fileName) {
   return fileName.startsWith(projectPathPrefix) ? fileName.slice(projectPathPrefix.length) : fileName;
 }
 
+function getMediaBlock(css, minWidth) {
+  const startPattern = new RegExp(`@media\\s*\\(min-width:\\s*${minWidth}\\)`, 'i');
+  const startMatch = startPattern.exec(css);
+  assert.ok(startMatch, `CSS needs a ${minWidth} min-width media query`);
+
+  const start = startMatch.index;
+  const remaining = css.slice(start + startMatch[0].length);
+  const nextMedia = remaining.search(/@media\s*\(/i);
+  return nextMedia === -1 ? css.slice(start) : css.slice(start, start + startMatch[0].length + nextMedia);
+}
+
 function assertCanonicalResourceLink(link, fileName, resourceIds) {
   const href = getAttribute(link, 'href');
   assert.match(href ?? '', /^resources\.html#[a-z0-9-]+$/, `${fileName} resource link needs one nonempty fragment`);
@@ -272,6 +283,39 @@ test('uses mobile-first grids with tablet laptop and desktop enhancements', () =
   assert.match(css, /@media\s*\(min-width:\s*48rem\)/i);
   assert.match(css, /@media\s*\(min-width:\s*64rem\)/i);
   assert.match(css, /@media\s*\(min-width:\s*70rem\)/i);
+});
+
+test('uses two-column mobile controls for compact filters', () => {
+  const css = read('css/style.css');
+  const mobileCss = css.split(/@media\s*\(/i)[0];
+
+  assert.match(mobileCss, /\.filter-buttons\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/si);
+});
+
+test('creates meaningful desktop structures on every page at 64rem', () => {
+  const css = read('css/style.css');
+  const desktopCss = getMediaBlock(css, '64rem');
+
+  for (const selector of ['route-section', 'experience-grid', 'stage-nav', 'stage-content', 'filters', 'resource-grid', 'error-page', 'site-footer__inner']) {
+    assert.match(desktopCss, new RegExp(`\\.${selector.replaceAll('_', '\\_')}\\s*(?:,|\\{)`), `64rem styles need a .${selector} rule`);
+  }
+
+  assert.match(desktopCss, /html\s*\{[^}]*scroll-padding-top:\s*(?:5\.5|6)rem/si, 'desktop scrolling must reserve space for the sticky Journey navigation');
+  assert.match(desktopCss, /\.filter-buttons\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/si, 'desktop filter groups need one readable button column');
+
+  assert.doesNotMatch(css, /@media\s*\([^)]*max-width/i, 'responsive rules must use min-width, not max-width');
+  assert.equal(fs.existsSync(path.join(root, '404.html')), true, 'the desktop deliverable needs a designed 404 page');
+
+  for (const fileName of pages) {
+    const html = read(fileName);
+    assert.match(html, /class="skip-link"[^>]+href="#main-content"/i, `${fileName} must retain the skip link`);
+    assert.match(html, /data-current-year/i, `${fileName} must retain the dynamic footer year marker`);
+  }
+
+  const resourceHtml = read('resources.html');
+  assert.match(resourceHtml, /data-resource-library/i);
+  assert.match(resourceHtml, /data-filter-group="stage"/i);
+  assert.match(resourceHtml, /data-filter-status[^>]+aria-live="polite"/i);
 });
 
 test('makes filter state perceivable beyond color', () => {

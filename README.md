@@ -28,6 +28,30 @@ Automated project tests support accessibility checks but do not replace WAVE, Ax
 
 CSS is mobile first. Layouts expand at tablet, laptop, and desktop widths without removing content. Images include intrinsic dimensions and scale within their containers. The video placeholder reserves a responsive 16:9 area; a final video must include captions and a transcript.
 
+## Desktop deliverable
+
+The official second-view target is `64rem` (1024px). Mobile remains the default layout, and every responsive media query uses `min-width`.
+
+- Home separates the introductory choice from two side-by-side route cards.
+- Experiences presents course and program cards in three-column groups.
+- Journey keeps the five-stage navigation available while actions and reflection prompts use the wider screen side by side.
+- Resource Library separates its filter explanation from the three filter groups and displays results in three columns.
+- The designed 404 page separates the error code from two-column recovery links.
+- Shared desktop navigation remains visible, and the footer uses a two-column information layout on every page.
+
+The accessible Resource Library filters are the unique addition for this deliverable. The JavaScript combines stage, experience, and resource-type choices, keeps `aria-pressed` synchronized, and announces the number of matching resources through a live region. Without JavaScript, every resource remains available. JavaScript also writes the current year in every footer.
+
+### Submission evidence checklist
+
+Before submitting the desktop writeup, capture separate results for Home, Experiences, Journey, Resource Library, and 404:
+
+- WAVE screenshot for each page.
+- Axe screenshot for each page with Best Practices enabled.
+- HTML validator result for each page with no errors.
+- Keyboard, 200% zoom, horizontal-overflow, and browser-console checks.
+
+Automated project tests do not replace these browser-validator screenshots. Do not report a validator as passed unless its result has been captured for every page.
+
 ## Running locally
 
 From this folder:
@@ -48,7 +72,7 @@ Tests cover page structure, internal files and fragments, canonical resources, i
 
 ## Images
 
-`images/placeholder.svg` is used until approved U-M photographs are selected. Each image has a nearby HTML comment describing the intended photograph. `images/umsi-logo-placeholder.svg` marks where the approved official UMSI logo should be added. Replace each placeholder and review its alt text so it accurately describes the final asset.
+The project uses local UMSI photographs and a UMSI signature asset from the `images` directory. If an image is replaced with a selection from the UMSI Digital Asset Portal, review its alt text so it describes the final image in that page's context.
 
 ## Publishing
 
